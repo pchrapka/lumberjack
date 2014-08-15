@@ -1,4 +1,4 @@
-function [ output_args ] = raw2fieldtrip( cfg )
+function [ data ] = raw2fieldtrip( cfg )
 %RAW2FIELDTRIP Converts raw EEG data to FieldTrip format
 %   RAW2FIELDTRIP(CFG) converts raw EEG data to a format that's useable
 %   with FieldTrip.
@@ -13,9 +13,11 @@ function [ output_args ] = raw2fieldtrip( cfg )
 %           time    Time axis (1 x n_samples)
 %           info    (optional)
 %       info_hdr    (optional) Header for additional info
-%       out_dir     Output directory for files
-%       file_name   Output file name root
-%       file_name_suf (optional)
+%
+%   save the converted data (optional)
+%   cfg.out_dir     Output directory for files
+%   cfg.file_name   Output file name root
+%   cfg.file_name_suf (optional)
 %           suffix for the file name
 %
 %   Source:
@@ -33,7 +35,7 @@ if isequal(length(cfg.label), n_channels)
     [data.label{:}] = cfg.label{:};
 else
     error(...
-        'rtms:raw2fieldtrip',...
+        'lumberjack:raw2fieldtrip',...
         ['cfg.label should contain ' num2str(n_channels) ' cells']);
 end
 
@@ -54,12 +56,13 @@ if isequal(size(cfg.trial,1), n_trials);
     for i=1:n_trials
         % Get the number of samples
         n_samples = length(cfg.trial{i}.time);
+        data.sampleinfo = [1 n_samples];
         % Get the trial data
         if isequal(size(cfg.trial{i}.data), [n_channels n_samples])
             data.trial{i} = cfg.trial{i}.data;
         else
             error(...
-                'rtms:raw2fieldtrip',...
+                'lumberjack:raw2fieldtrip',...
                 'cfg.trial.data is a bad size');
         end
         % Get the time axis
@@ -74,23 +77,26 @@ if isequal(size(cfg.trial,1), n_trials);
     end
 else
     error(...
-        'rtms:raw2fieldtrip',...
+        'lumberjack:raw2fieldtrip',...
         ['cfg.trial should contain ' num2str(n_trials) ' cells']);
 end
 
 %% Save the data
-% Create the directory if it doesn't exist
-if ~exist(cfg.out_dir, 'dir')
-    mkdir(cfg.out_dir);
+if isfield(cfg, 'out_dir')
+    % Create the directory if it doesn't exist
+    if ~exist(cfg.out_dir, 'dir')
+        mkdir(cfg.out_dir);
+    end
+    % Set up the file name
+    if isfield(cfg, 'file_name_suf') && ~isempty(cfg.file_name_suf)
+        out_file = fullfile(cfg.out_dir,...
+            [cfg.file_name '_' cfg.file_name_suf '.mat']);
+    else
+        out_file = fullfile(cfg.out_dir,...
+            [cfg.file_name '.mat']);
+    end
+    save(out_file, 'data');
 end
-if isfield(cfg, 'file_name_suf') && ~isempty(cfg.file_name_suf)
-    out_file = fullfile(cfg.out_dir,...
-        [cfg.file_name '_' cfg.file_name_suf '.mat']);
-else
-    out_file = fullfile(cfg.out_dir,...
-        [cfg.file_name '.mat']);
-end
-save(out_file, 'data');
 
 end
 
