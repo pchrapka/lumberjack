@@ -4,15 +4,23 @@ function [ data ] = raw2fieldtrip( cfg )
 %   with FieldTrip.
 %
 %   cfg requires the following fields
-%       n_channels
-%       n_trials
-%       label       Channel labels (n_channels x 1)
-%       fsample     Sampling rate (Hz)
-%       trial       Cell array of trial data
-%           data    Trial data (n_channels x n_samples)
-%           time    Time axis (1 x n_samples)
-%           info    (optional)
-%       info_hdr    (optional) Header for additional info
+%   cfg.n_channels
+%   cfg.n_trials
+%   cfg.label       
+%       channel labels (n_channels x 1)
+%   cfg.fsample     
+%       sampling rate (Hz)
+%   cfg.trial       
+%       cell array of trial data with the following fields:
+%           data 
+%               data (n_channels x n_samples)
+%           time    
+%               time axis (1 x n_samples)
+%           info    
+%               (optional) cell array of additional info for each trial,
+%               length(info_hdr)
+%   cfg.info_hdr    
+%       (optional) headers for additional trial info 
 %
 %   save the converted data (optional)
 %   cfg.out_dir     Output directory for files
