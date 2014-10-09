@@ -22,7 +22,7 @@ pattern =  regexptranslate('escape', cfg.name);
 out = regexp(metric.name, ['^' pattern '$']);
 
 if isempty(out)
-    out = 0;
+    out = false;
     return;
 end
 
@@ -32,22 +32,26 @@ for i=1:length(names)
     field = names{i};
     field_val = cfg.(field);
     
+    % Return if the field doesn't even exist
+    if ~isfield(metric, field)
+        out = false;
+        return;
+    end
+    
     % Check the field, based on the type of the value in the field
     if ischar(field_val)
         pattern =  regexptranslate('escape', field_val);
         out = regexp(metric.(field), ['^' pattern '$']);
-    elseif isinteger(field_val)
-        out = metric.(field) == field_val;
     else
-        disp(cfg.(field));
-        error('lumberjack:check_metric',...
-            'unknown value type');
+        out = isequaln(metric.(field), field_val);
     end
     
     % Check the result
     if isempty(out)
-        out = 0;
+        out = false;
         return;
+    else
+        out = logical(out);
     end
     
 end
