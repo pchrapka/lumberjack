@@ -21,6 +21,11 @@ classdef check_metric_test < matlab.unittest.TestCase
             testcase.data.metrics{k}.interval_start = 10;
             testcase.data.metrics{k}.interval_end = 15;
             k = k+1;
+            
+            testcase.data.metrics{k}.name = 'gmfa';
+            testcase.data.metrics{k}.interval_start = 7;
+            testcase.data.metrics{k}.interval_end = 10;
+            k = k+1;
         end
         
     end

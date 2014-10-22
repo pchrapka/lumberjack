@@ -40,8 +40,13 @@ for i=1:length(names)
     
     % Check the field, based on the type of the value in the field
     if ischar(field_val)
-        pattern =  regexptranslate('escape', field_val);
-        out = regexp(metric.(field), ['^' pattern '$']);
+        if ischar(metric.(field))
+            pattern =  regexptranslate('escape', field_val);
+            out = regexp(metric.(field), ['^' pattern '$']);
+        else
+            out = false;
+            return
+        end
     else
         out = isequaln(metric.(field), field_val);
     end
@@ -52,6 +57,10 @@ for i=1:length(names)
         return;
     else
         out = logical(out);
+        if ~out
+            % Return if we've discovered a non-match
+            return;
+        end
     end
     
 end

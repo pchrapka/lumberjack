@@ -27,6 +27,11 @@ classdef get_metric_idx_test < matlab.unittest.TestCase
             
             testcase.data.metrics{k}.name = 'fft1';
             k = k+1;
+            
+            testcase.data.metrics{k}.name = 'gmfa';
+            testcase.data.metrics{k}.interval_start = 7;
+            testcase.data.metrics{k}.interval_end = 10;
+            k = k+1;
         end
         
     end
@@ -44,7 +49,7 @@ classdef get_metric_idx_test < matlab.unittest.TestCase
             cfg = [];
             cfg.name = 'gmfa';
             idx = lumberjack.get_metric_idx(cfg, testcase.data);
-            testcase.verifyEqual(idx, [3 4], 'Error with basic searching');
+            testcase.verifyEqual(idx, [3 4 6], 'Error with basic searching');
             
             % test fft1
             cfg = [];
@@ -68,7 +73,7 @@ classdef get_metric_idx_test < matlab.unittest.TestCase
             cfg.name = 'gmfa';
             cfg.interval_end = 10;
             idx = lumberjack.get_metric_idx(cfg, testcase.data);
-            testcase.verifyEqual(idx, 3, 'Error with basic searching');
+            testcase.verifyEqual(idx, [3 6], 'Error with basic searching');
             
             % test gmfa
             cfg = [];
