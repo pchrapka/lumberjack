@@ -1,14 +1,17 @@
 function take_screenshot(cfg)
 % Takes a screenshot using gnome-screenshot
+%   cfg.img_dir
+%   cfg.filename
 
 % Create the folder
-[pathstr, ~, ~, ~] = lumberjack.fileparts(cfg.filename);
-if ~exist(pathstr, 'dir');
-    mkdir(pathstr);
+if ~exist(cfg.img_dir, 'dir');
+    mkdir(cfg.img_dir);
 end
 
+fullfilename = fullfile(cfg.img_dir, cfg.filename);
+
 % Create the command
-command = ['gnome-screenshot -f ' cfg.filename];
+command = ['gnome-screenshot -f ' fullfilename];
 % Take the screenshot
 system(command);
 
