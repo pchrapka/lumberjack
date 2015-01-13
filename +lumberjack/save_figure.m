@@ -6,13 +6,23 @@ function save_figure(cfg)
 %       (string) output directory
 %   cfg.file_name
 %       (string) file name to use, no extension
-%   
+%
+
+% Check if the output dir exists
+if ~exist(cfg.out_dir, 'dir')
+    mkdir(cfg.out_dir);
+end
 
 % Construct the file name
 file_name = fullfile(cfg.out_dir, cfg.file_name);
+drawnow;
 
 % Save the figure to a file
-saveas(gcf, [file_name '.fig']);
-saveas(gcf, [file_name '.eps'],'epsc2');
-saveas(gcf, [file_name '.png']);
+if exist('export_fig', 'file')
+    export_fig(file_name, '-eps', '-png');
+else
+    saveas(gcf, [file_name '.fig']);
+    saveas(gcf, [file_name '.eps'],'epsc2');
+    saveas(gcf, [file_name '.png']);
+end
 end
