@@ -19,6 +19,7 @@ drawnow;
 
 % Save the figure to a file
 if exist('export_fig', 'file')
+    set(gcf, 'Color', 'w');
     export_fig(file_name, '-eps', '-png');
 else
     saveas(gcf, [file_name '.fig']);
