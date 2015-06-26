@@ -1,6 +1,10 @@
-function out = strfindlist(list, pattern)
-%STRFINDLIST finds a pattern in a cell array of strings
+function match = strfindlist(list, pattern)
 
-out = ~cellfun('isempty',strfind(list,pattern));
+result = lumberjack.strfindlisti(list, pattern);
+if sum(result) == 0
+    match = '';
+else
+    match = list{result};
+end
 
 end
